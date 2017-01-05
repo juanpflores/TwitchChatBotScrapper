@@ -44,7 +44,7 @@ class TwitchChatBotScrapper(object):
             for line in chat:
                 print(line)
                 Loading = loadingComplete(line)
-        #self.sendMessage("Succesfully Joined Channel")
+        # self.sendMessage("Hola a Todos!")
         self.readMessages()
 
     def sendMessage(self, message):
@@ -63,8 +63,10 @@ class TwitchChatBotScrapper(object):
             readbuffer = chat.pop()
 
             for line in chat:
-                #print(line)
-                parseChat(line, self.CHANNEL)
+                if "PING" in line:
+                	self.SOCKET.send(line.replace('PING', 'PONG'))
+                else:
+                	parseChat(line, self.CHANNEL)
 
 
 def loadingComplete(line):
@@ -82,7 +84,7 @@ def parseChat(line, channel):
 	chat_pivot = "#" + channel + " :"
 	timestamp = str(datetime.datetime.now()).split(".")[0]
 
-	data = string.split(line,"!")
+	data = string.split(line, "!")
 	username = data[0][1:]
-	message = line.split(chat_pivot,1)[1]
+	message = line.split(chat_pivot, 1)[1]
 	print("READ:\t" + timestamp + "\t" + username + "\t" + message)
