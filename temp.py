@@ -10,7 +10,7 @@ class TwitchChatBotScrapper(object):
         settings.py file.'''
         self.HOST = HOST
         self.PORT = PORT
-        self.PASS = PASS
+        self.__PASS = PASS
         self.IDENT = IDENT
         self.CHANNEL = CHANNEL
         self.SOCKET = self.openSocket()
@@ -20,7 +20,7 @@ class TwitchChatBotScrapper(object):
         setting the user defined in the settings.py folder.'''
         bot_socket = socket.socket()
         bot_socket.connect((self.HOST, self.PORT))
-        bot_socket.send("PASS " + self.PASS + "\r\n")
+        bot_socket.send("PASS " + self.__PASS + "\r\n")
         bot_socket.send("NICK " + self.IDENT + "\r\n")
         bot_socket.send("JOIN #" + self.CHANNEL + "\r\n")
         print("SOCKET opened successfully!")
@@ -44,7 +44,7 @@ class TwitchChatBotScrapper(object):
                 print(line)
                 Loading = loadingComplete(line)
         self.sendMessage("Succesfully Joined Channel")
-        # self.readMessages(chat_line)
+        self.readMessages()
 
     def sendMessage(self, message):
         '''Sends a Message through the socket into the channel's
@@ -53,7 +53,7 @@ class TwitchChatBotScrapper(object):
         self.SOCKET.send(messageTemp + "\r\n")
         print("SENT: " + messageTemp)
 
-    def readMessages(self, chat_line):
+    def readMessages(self):
         readbuffer = ""
 
         while True:
@@ -71,3 +71,6 @@ def loadingComplete(line):
         return False
     else:
         return True
+
+def parseChat(line):
+	return
