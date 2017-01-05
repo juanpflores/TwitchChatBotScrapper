@@ -1,6 +1,6 @@
 
 HOST = "irc.chat.twitch.tv"
 PORT = 6667
-PASS = "Enter your API KEY HERE"	#Ex "oauth:e5eg4g9t..."
+PASS = "oauth:eorayo1ugdmhke98bq6xakn06yw5st"
 IDENT = "juanpflores94"
-CHANNEL = "juanpflores94"
+CHANNEL = "rouzvega"

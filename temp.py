@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import socket
 import string
+import datetime
 
 
 class TwitchChatBotScrapper(object):
@@ -43,7 +44,7 @@ class TwitchChatBotScrapper(object):
             for line in chat:
                 print(line)
                 Loading = loadingComplete(line)
-        self.sendMessage("Succesfully Joined Channel")
+        #self.sendMessage("Succesfully Joined Channel")
         self.readMessages()
 
     def sendMessage(self, message):
@@ -62,7 +63,8 @@ class TwitchChatBotScrapper(object):
             readbuffer = chat.pop()
 
             for line in chat:
-                print(line)
+                #print(line)
+                parseChat(line, self.CHANNEL)
 
 
 def loadingComplete(line):
@@ -72,5 +74,15 @@ def loadingComplete(line):
     else:
         return True
 
-def parseChat(line):
-	return
+def parseChat(line, channel):
+
+	#  We Use chat_pivot to separate the message of the chat from
+	# the text we get from the IRC. This allows us to get the
+	# precise message even if the user use ":" or other simbols
+	chat_pivot = "#" + channel + " :"
+	timestamp = str(datetime.datetime.now()).split(".")[0]
+
+	data = string.split(line,"!")
+	username = data[0][1:]
+	message = line.split(chat_pivot,1)[1]
+	print("READ:\t" + timestamp + "\t" + username + "\t" + message)
