@@ -86,5 +86,17 @@ def parseChat(line, channel):
 
 	data = string.split(line, "!")
 	username = data[0][1:]
+
+	if username.endswith("bot"):
+		print("A Bot sent a message!")
+		return
+
 	message = line.split(chat_pivot, 1)[1]
 	print("READ:\t" + timestamp + "\t" + username + "\t" + message)
+
+
+
+
+
+
+
