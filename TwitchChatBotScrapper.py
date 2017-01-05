@@ -1,8 +1,8 @@
-from Socket import openSocket
-from initialize import joinRoom
+#!/usr/bin/python
 
-s = openSocket()
-joinRoom(s)
+from temp import TwitchChatBotScrapper
+from settings import HOST, PORT, PASS, IDENT, CHANNEL
 
-while True:
-	persist = True
+chatBot = TwitchChatBotScrapper(HOST, PORT, PASS, IDENT, CHANNEL)
+chatBot.openSocket()
+chatBot.runBot()
