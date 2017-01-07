@@ -70,7 +70,11 @@ class TwitchChatBotScrapper(object):
 
 
 def loadingComplete(line):
-    ''' Checks if there are more messages in the chat '''
+    ''' Checks if the bot has completed the loading fase and returns
+    a boolean to the run function.'''
+
+    # When the bot read a /NAMES it means it has succesfully loaded
+    # the target channel.
     if("End of /NAMES list" in line):
         return False
     else:
@@ -87,6 +91,7 @@ def parseChat(line, channel):
 	data = string.split(line, "!")
 	username = data[0][1:]
 
+    #We need to igonre the messages sent by other bots in the chat
 	if username.endswith("bot"):
 		print("A Bot sent a message!")
 		return
