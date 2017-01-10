@@ -1,4 +1,5 @@
 #!/usr/bin/python
+
 import socket
 import string
 import datetime
@@ -79,29 +80,3 @@ def loadingComplete(line):
         return False
     else:
         return True
-
-def parseChat(line, channel):
-
-	#  We Use chat_pivot to separate the message of the chat from
-	# the text we get from the IRC. This allows us to get the
-	# precise message even if the user use ":" or other simbols
-	chat_pivot = "#" + channel + " :"
-	timestamp = str(datetime.datetime.now()).split(".")[0]
-
-	data = string.split(line, "!")
-	username = data[0][1:]
-
-    #We need to igonre the messages sent by other bots in the chat
-	if username.endswith("bot"):
-		print("A Bot sent a message!")
-		return
-
-	message = line.split(chat_pivot, 1)[1]
-	print("READ:\t" + timestamp + "\t" + username + "\t" + message)
-
-
-
-
-
-
-
