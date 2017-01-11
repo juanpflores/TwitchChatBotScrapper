@@ -3,6 +3,7 @@
 import socket
 import string
 import datetime
+from botParser import parseChat
 
 
 class TwitchChatBotScrapper(object):

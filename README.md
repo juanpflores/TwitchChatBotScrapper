@@ -1,5 +1,5 @@
 # :space_invader: TwitchChatBotScrapper :space_invader:
-TwitchChatBotScrapper is a Twitch bot that uses Twitch IRC to connected to a specific channel and saves all the messages on a JSON file.
+TwitchChatBotScrapper is a Twitch bot that uses Twitch IRC to connected to a user specified channel and saves all the messages on a JSON file.
 
 ## Installation
 1. Clone or Download the Repo using this address: `https://github.com/juanpflores/TwitchChatBotScrapper.git`.
