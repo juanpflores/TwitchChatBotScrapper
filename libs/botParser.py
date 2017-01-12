@@ -1,8 +1,10 @@
 #!/usr/bin/python
+
 import json
 import os
 import datetime
 import string
+from READv3 import *
 
 chat_log = {}
 message_count = 0
@@ -29,28 +31,30 @@ def createOutputFile(channel_name):
 		sample.write(general_info_json)
 
 
-
 def parseChat(line, channel):
 	global message_count
 
-	chat_pivot = "#" + channel + " :"
-
 	timestamp = str(datetime.datetime.now()).split(".")[0]
-	username = getUsername(line)
-	message = getMessage(line, chat_pivot)
-	# mod = getMod(line)
-	# sub = getSub(line)
+	username = getUser(line)
+	message = getMessage(line)
+	channelname = getChannelname(line)
+	owner = getOwner(line)
+	mod = getMod(line)
+	sub = getSub(line)
+	subbadge = getSubbadge(line)
+	turbo = getTurbo(line)
+	prime = getPrime(line)
 
 	message_count += 1
 
-	#We need to igonre the messages sent by other bots in the chat
+	# We need to ignore the messages sent by other bots in the chat
 	if username.endswith("bot"):
 		print("[NOTIFICATION]: A Bot sent a message!")
 		return
 	
 	print("[READ]:\t" + timestamp + "\t" + username + "\t" + message)
-	print("[NOTIFICATION]: Adding message to Dictionary")
-	addToDictionary(message_count, username, timestamp, message)
+	# print("[NOTIFICATION]: Adding message to Dictionary")
+	# addToDictionary(message_count, username, timestamp, message)
 
 
 def addToDictionary(message_id, username, timestamp, message):
@@ -65,37 +69,3 @@ def addToDictionary(message_id, username, timestamp, message):
 	print("[SUCCESS]: Added message to Dictionary")
 	# print(chat_log)
 
-
-def getUsername(line):
-	''' Get the username from the chat and ignores other
-		bots that are in the chat. '''
-	data = string.split(line, "!")
-	username = data[0][1:]
-	return username
-
-
-def getMessage(line, pivot):
-	#  We Use pivot to separate the message of the chat from
-	# the text we get from the IRC. This allows us to get the
-	# precise message even if the user use ":" or other simbols
-	message = line.split(pivot, 1)[1]
-	return message
-
-
-# def getMod(line):
-# 	''' Get if the user is a Mod of the channel.
-# 		@authors: Safinah Ali & Joseph Seering
-# 	'''
-# 	separate = line.split("mod=", 1)
-# 	separate2 = separate[1].split(";",1)
-# 	mod = separate2[0].strip()
-# 	return mod
-
-# def getSub(line):
-# 	''' Parses whether a user who sends a message is a subscriber
-# 		@authors: Safinah Ali & Joseph Seering
-# 	'''
-# 	separate = line.split("subscriber=", 1)
-# 	separate2 = separate[1].split(";",1)
-# 	sub = separate2[0].strip()
-# 	return sub

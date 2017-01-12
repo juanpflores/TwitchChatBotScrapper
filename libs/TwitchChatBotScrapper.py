@@ -24,10 +24,16 @@ class TwitchChatBotScrapper(object):
         bot_socket = socket.socket()
         bot_socket.connect((self.HOST, self.PORT))
         bot_socket.send("PASS " + self.__PASS + "\r\n")
+        bot_socket.send("CAP REQ :twitch.tv/commands" + "\r\n")
+        bot_socket.send("CAP REQ :twitch.tv/tags" + "\r\n")
         bot_socket.send("NICK " + self.IDENT + "\r\n")
         bot_socket.send("JOIN #" + self.CHANNEL + "\r\n")
         print("SOCKET opened successfully!")
         return bot_socket
+
+    def closeSocket(self):
+        self.send("QUIT\r\n")
+
 
     def runBot(self):
         ''' Executes the Bot. The first ste is to load the bot
