@@ -3,7 +3,7 @@
 import socket
 import string
 import datetime
-from botParser import parseChat
+from botParser import parseChat, createOutputFile
 
 
 class TwitchChatBotScrapper(object):
@@ -64,6 +64,7 @@ class TwitchChatBotScrapper(object):
 
     def readMessages(self):
         readbuffer = ""
+        createOutputFile(self.CHANNEL)
 
         while True:
             readbuffer += self.SOCKET.recv(1024)

@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import json
+import msgpack
 import os
 import datetime
 import string
@@ -12,7 +12,7 @@ file_name = ""
 
 
 def createOutputFile(channel_name):
-	''' Creates a PICKLE output File on the sample folder
+	''' Creates a MSGPack output File on the sample folder
 	that cointains the general information about the
 	channel that includes channel name and the time
 	that the channel began being scrapped. '''
@@ -22,13 +22,14 @@ def createOutputFile(channel_name):
 		'channel_name': channel_name,
 		'start_time': start_time
 	}
-	general_info_json = json.dumps(chat_log)
-	os.chdir('../sample')
+	packed_data = msgpack.packb(chat_log)
+	os.chdir('./sample')
 	print(chat_log)
-	file_name = channel_name + "_" + start_time + ".json"
+	file_name = channel_name + "_" + start_time + ".txt"
 	file_name.replace("\ ", "_")
 	with open(file_name, "w+") as sample:
-		sample.write(general_info_json)
+		sample.write(packed_data)
+		print("[SUCCESS]: Output File Created!")
 
 
 def parseChat(line, channel):
@@ -51,17 +52,28 @@ def parseChat(line, channel):
 	message_count += 1
 
 	# We need to ignore the messages sent by other bots in the chat
-	if username.endswith("bot"):
-		print("[NOTIFICATION]: A Bot sent a message!")
-		return
+	# if username.endswith("bot"):
+	# 	print("[NOTIFICATION]: A Bot sent a message!")
+	# 	return
 
-	# print("[NOTIFICATION]: Adding message to Dictionary")
-	# addToDictionary(message_count, username, timestamp, message)
+	print("[NOTIFICATION]: Serializing message")
+	serializeData(
+		message_name, message_count, owner, subbadge, turbo, prime,
+		mod, sub, username, timestamp, message)
 
 
-def addToDictionary(message_name, message_id, username, timestamp, message):
+def serializeData(
+	message_name, message_id, owner, subbadge, turbo,
+	prime, mod, sub, username, timestamp, message):
 	'''  '''
-	chat_log[message_name] = {
+
+	# Open the target file created before. 
+	with open(file_name, "r") as sample:
+		data = msgpack.unpack(sample)
+		print("[SUCCESS]: Data Loaded from File")
+
+	# We add the message to our dictinary of data
+	data[message_name] = {
 		'id': message_id,
 		'owner': owner,
 		'mod': mod,
@@ -73,6 +85,11 @@ def addToDictionary(message_name, message_id, username, timestamp, message):
 		'timestamp': timestamp,
 		'message': message
 	}
-	print("[SUCCESS]: Added message to Dictionary")
-	# print(chat_log)
+	print("[SUCCESS]: Added message " + str(message_id) + " to Dictionary")
+	# print(data[message_name][message])
+
+	# Pack data and save the file. 
+	packed_data = msgpack.packb(data)
+	with open(file_name, "w+") as sample:
+		sample.write(packed_data)
 
