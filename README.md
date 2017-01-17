@@ -17,7 +17,7 @@ TwitchChatBotScrapper is a Twitch bot that uses Twitch IRC to connected to a use
 Just run the main.py file or you can use the bot on your own projects  :thumbsup:
 
 ### On you own project
-If you want to use the bot in your own project you will ned to copy the TwitchChatBotScrapper.py file and exectute `.openSocket()` and `.runBot` to allow the bot to work.
+If you want to use the bot in your own project you will ned to copy the TwitchChatBotScrapper.py file and exectute `.openSocket()` then `.loadBot` and finally `.readMessage()` to allow the bot to work.
 
 ## Contributing
 1. Fork it!
