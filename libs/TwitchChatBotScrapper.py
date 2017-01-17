@@ -59,7 +59,6 @@ class TwitchChatBotScrapper(object):
                 Loading = loadingComplete(line)
                 if Loading == False:
                     break
-        # self.sendMessage("Hola a Todos!")
 
     def sendMessage(self, message):
         '''Sends a Message through the socket into the channel's
@@ -69,6 +68,8 @@ class TwitchChatBotScrapper(object):
         print("SENT: " + messageTemp)
 
     def readMessages(self):
+        ''' Reads all the messages of the chat, parses them and
+        them.'''
         start_time = time.time()
         readbuffer = ""
         createOutputFile(self.CHANNEL)
@@ -79,6 +80,7 @@ class TwitchChatBotScrapper(object):
             readbuffer = chat.pop()
 
             for line in chat:
+                # Here we respond to the server's PING
                 if "PING" in line:
                     self.SOCKET.send(line.replace('PING', 'PONG'))
                     print(Back.YELLOW + "[READ PING]: Responded Pong")
@@ -88,7 +90,6 @@ class TwitchChatBotScrapper(object):
             if time.time() > start_time + 60 * 4:
                 self.closeSocket()
                 self.openSocket()
-                # self.loadBot()
                 print(Back.YELLOW + "[NOTIFICATION]: Restarting Bot")
                 start_time = time.time()
 

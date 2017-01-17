@@ -34,6 +34,7 @@ def createOutputFile(channel_name):
 
 
 def parseChat(line, channel):
+	'''Parses a message into smaller components to be serialized.'''
 	global message_count
 
 	if "PRIVMSG" in line:
