@@ -1,17 +1,23 @@
 # :space_invader: TwitchChatBotScrapper :space_invader:
-TwitchChatBotScrapper is a Twitch bot that uses Twitch IRC to connected to a specific channel and saves all the messages on a JSON file.
+TwitchChatBotScrapper is a Twitch bot that uses Twitch IRC to connected to a user specified channel and saves all the messages on a JSON file.
+
+## Requirements
+1. PIP
+2. `pip install msgpack-python`
+3. `pip install colorama`
+
 
 ## Installation
 1. Clone or Download the Repo using this address: `https://github.com/juanpflores/TwitchChatBotScrapper.git`.
 2. Get your Twitch API KEY from http://twitchapps.com.
 3. Change the settings.py file with your information.
-4. 
+4. You'll need to install the next 
 
 ## Usage
 Just run the main.py file or you can use the bot on your own projects  :thumbsup:
 
 ### On you own project
-If you want to use the bot in your own project you will ned to copy the TwitchChatBotScrapper.py file and exectute `.openSocket()` and `.runBot` to allow the bot to work.
+If you want to use the bot in your own project you will ned to copy the TwitchChatBotScrapper.py file and exectute `.openSocket()` then `.loadBot` and finally `.readMessage()` to allow the bot to work.
 
 ## Contributing
 1. Fork it!
