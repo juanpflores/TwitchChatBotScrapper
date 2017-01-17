@@ -1,7 +1,14 @@
 #!/usr/bin/python
+
 import socket
 import string
+import time
 import datetime
+from botParser import parseChat, createOutputFile
+from colorama import init, Fore, Back, Style
+
+# Initialize Colorama for term notifications
+init(autoreset=True)
 
 
 class TwitchChatBotScrapper(object):
@@ -22,12 +29,17 @@ class TwitchChatBotScrapper(object):
         bot_socket = socket.socket()
         bot_socket.connect((self.HOST, self.PORT))
         bot_socket.send("PASS " + self.__PASS + "\r\n")
+        bot_socket.send("CAP REQ :twitch.tv/commands" + "\r\n")
+        bot_socket.send("CAP REQ :twitch.tv/tags" + "\r\n")
         bot_socket.send("NICK " + self.IDENT + "\r\n")
         bot_socket.send("JOIN #" + self.CHANNEL + "\r\n")
-        print("SOCKET opened successfully!")
+        print(Fore.GREEN + "[SUCCESS]: SOCKET opened!")
         return bot_socket
 
-    def runBot(self):
+    def closeSocket(self):
+        self.SOCKET.send("QUIT\r\n")
+
+    def loadBot(self):
         ''' Executes the Bot. The first ste is to load the bot
         into an especific channel, once the bot is loaded sends
         message to the chat anouncing it was succesful while
@@ -35,6 +47,7 @@ class TwitchChatBotScrapper(object):
         readbuffer = ""
         Loading = True
         print("Joined Room")
+        print(Back.YELLOW + Fore.WHITE + "[NOTIFICATION]: Loading..")
 
         while Loading:
             readbuffer = readbuffer + self.SOCKET.recv(1024)
@@ -42,10 +55,10 @@ class TwitchChatBotScrapper(object):
             readbuffer = chat.pop()
 
             for line in chat:
-                print(line)
+                # print(line)
                 Loading = loadingComplete(line)
-        # self.sendMessage("Hola a Todos!")
-        self.readMessages()
+                if Loading == False:
+                    break
 
     def sendMessage(self, message):
         '''Sends a Message through the socket into the channel's
@@ -55,7 +68,11 @@ class TwitchChatBotScrapper(object):
         print("SENT: " + messageTemp)
 
     def readMessages(self):
+        ''' Reads all the messages of the chat, parses them and
+        them.'''
+        start_time = time.time()
         readbuffer = ""
+        createOutputFile(self.CHANNEL)
 
         while True:
             readbuffer += self.SOCKET.recv(1024)
@@ -63,40 +80,28 @@ class TwitchChatBotScrapper(object):
             readbuffer = chat.pop()
 
             for line in chat:
+                # Here we respond to the server's PING
                 if "PING" in line:
-                	self.SOCKET.send(line.replace('PING', 'PONG'))
+                    self.SOCKET.send(line.replace('PING', 'PONG'))
+                    print(Back.YELLOW + "[READ PING]: Responded Pong")
                 else:
-                	parseChat(line, self.CHANNEL)
+                    parseChat(line, self.CHANNEL)
+
+            if time.time() > start_time + 60 * 4:
+                self.closeSocket()
+                self.openSocket()
+                print(Back.YELLOW + "[NOTIFICATION]: Restarting Bot")
+                start_time = time.time()
 
 
 def loadingComplete(line):
-    ''' Checks if there are more messages in the chat '''
+    ''' Checks if the bot has completed the loading fase and returns
+    a boolean to the run function.'''
+
+    # When the bot read a /NAMES it means it has succesfully loaded
+    # the target channel.
     if("End of /NAMES list" in line):
+        print(Back.GREEN + Fore.WHITE + "[SUCCESS]: Loading Complete")
         return False
     else:
         return True
-
-def parseChat(line, channel):
-
-	#  We Use chat_pivot to separate the message of the chat from
-	# the text we get from the IRC. This allows us to get the
-	# precise message even if the user use ":" or other simbols
-	chat_pivot = "#" + channel + " :"
-	timestamp = str(datetime.datetime.now()).split(".")[0]
-
-	data = string.split(line, "!")
-	username = data[0][1:]
-
-	if username.endswith("bot"):
-		print("A Bot sent a message!")
-		return
-
-	message = line.split(chat_pivot, 1)[1]
-	print("READ:\t" + timestamp + "\t" + username + "\t" + message)
-
-
-
-
-
-
-
