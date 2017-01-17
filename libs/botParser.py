@@ -5,6 +5,7 @@ import os
 import datetime
 import string
 from READv3 import *
+from colorama import init, Fore, Back, Style
 
 chat_log = {}
 message_count = 0
@@ -29,37 +30,39 @@ def createOutputFile(channel_name):
 	file_name.replace("\ ", "_")
 	with open(file_name, "w+") as sample:
 		sample.write(packed_data)
-		print("[SUCCESS]: Output File Created!")
+		print(Fore.GREEN + "[SUCCESS]: Output File Created!")
 
 
 def parseChat(line, channel):
 	global message_count
 
 	if "PRIVMSG" in line:
-
-		message_name = "message-" + str(message_count)
-		timestamp = str(datetime.datetime.now()).split(".")[0]
-		username = getUser(line)
-		message = getMessage(line)
-		owner = getOwner(line)
-		mod = getMod(line)
-		sub = getSub(line)
-		subbadge = getSubbadge(line)
-		turbo = getTurbo(line)
-		prime = getPrime(line)
-		print("[READ MESSAGE]:\t" + timestamp + "\t" + username + "\t" + message)
-
-	message_count += 1
+		try:
+			message_name = "message-" + str(message_count)
+			timestamp = str(datetime.datetime.now()).split(".")[0]
+			username = getUser(line)
+			message = getMessage(line)
+			owner = getOwner(line)
+			mod = getMod(line)
+			sub = getSub(line)
+			subbadge = getSubbadge(line)
+			turbo = getTurbo(line)
+			prime = getPrime(line)
+			# print("[READ MESSAGE]:\t" + timestamp + "\t" + username + "\t" + message)
+			print(Fore.YELLOW + "[NOTIFICATION]: Serializing message")
+			serializeData(
+				message_name, message_count, owner, subbadge, turbo, prime,
+				mod, sub, username, timestamp, message)
+			message_count += 1
+		except Exception as e:
+			print(Back.RED + Fore.WHITE + "[Error]: Message contained an error!")
+			print(line)
+			return
 
 	# We need to ignore the messages sent by other bots in the chat
 	# if username.endswith("bot"):
 	# 	print("[NOTIFICATION]: A Bot sent a message!")
 	# 	return
-
-	print("[NOTIFICATION]: Serializing message")
-	serializeData(
-		message_name, message_count, owner, subbadge, turbo, prime,
-		mod, sub, username, timestamp, message)
 
 
 def serializeData(
@@ -70,7 +73,7 @@ def serializeData(
 	# Open the target file created before. 
 	with open(file_name, "r") as sample:
 		data = msgpack.unpack(sample)
-		print("[SUCCESS]: Data Loaded from File")
+		# print(Fore.GREEN + "[SUCCESS]: Data Loaded from File")
 
 	# We add the message to our dictinary of data
 	data[message_name] = {
@@ -85,7 +88,7 @@ def serializeData(
 		'timestamp': timestamp,
 		'message': message
 	}
-	print("[SUCCESS]: Added message " + str(message_id) + " to Dictionary")
+	print(Fore.GREEN + "[SUCCESS]: Added message " + str(message_id) + " to Dictionary")
 	# print(data[message_name][message])
 
 	# Pack data and save the file. 

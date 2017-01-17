@@ -2,8 +2,13 @@
 
 import socket
 import string
+import time
 import datetime
 from botParser import parseChat, createOutputFile
+from colorama import init, Fore, Back, Style
+
+# Initialize Colorama for term notifications
+init(autoreset=True)
 
 
 class TwitchChatBotScrapper(object):
@@ -28,14 +33,13 @@ class TwitchChatBotScrapper(object):
         bot_socket.send("CAP REQ :twitch.tv/tags" + "\r\n")
         bot_socket.send("NICK " + self.IDENT + "\r\n")
         bot_socket.send("JOIN #" + self.CHANNEL + "\r\n")
-        print("SOCKET opened successfully!")
+        print(Fore.GREEN + "[SUCCESS]: SOCKET opened!")
         return bot_socket
 
     def closeSocket(self):
-        self.send("QUIT\r\n")
+        self.SOCKET.send("QUIT\r\n")
 
-
-    def runBot(self):
+    def loadBot(self):
         ''' Executes the Bot. The first ste is to load the bot
         into an especific channel, once the bot is loaded sends
         message to the chat anouncing it was succesful while
@@ -43,6 +47,7 @@ class TwitchChatBotScrapper(object):
         readbuffer = ""
         Loading = True
         print("Joined Room")
+        print(Back.YELLOW + Fore.WHITE + "[NOTIFICATION]: Loading..")
 
         while Loading:
             readbuffer = readbuffer + self.SOCKET.recv(1024)
@@ -50,10 +55,11 @@ class TwitchChatBotScrapper(object):
             readbuffer = chat.pop()
 
             for line in chat:
-                print(line)
+                # print(line)
                 Loading = loadingComplete(line)
+                if Loading == False:
+                    break
         # self.sendMessage("Hola a Todos!")
-        self.readMessages()
 
     def sendMessage(self, message):
         '''Sends a Message through the socket into the channel's
@@ -63,6 +69,7 @@ class TwitchChatBotScrapper(object):
         print("SENT: " + messageTemp)
 
     def readMessages(self):
+        start_time = time.time()
         readbuffer = ""
         createOutputFile(self.CHANNEL)
 
@@ -73,9 +80,17 @@ class TwitchChatBotScrapper(object):
 
             for line in chat:
                 if "PING" in line:
-                	self.SOCKET.send(line.replace('PING', 'PONG'))
+                    self.SOCKET.send(line.replace('PING', 'PONG'))
+                    print(Back.YELLOW + "[READ PING]: Responded Pong")
                 else:
-                	parseChat(line, self.CHANNEL)
+                    parseChat(line, self.CHANNEL)
+
+            if time.time() > start_time + 60 * 4:
+                self.closeSocket()
+                self.openSocket()
+                # self.loadBot()
+                print(Back.YELLOW + "[NOTIFICATION]: Restarting Bot")
+                start_time = time.time()
 
 
 def loadingComplete(line):
@@ -85,6 +100,7 @@ def loadingComplete(line):
     # When the bot read a /NAMES it means it has succesfully loaded
     # the target channel.
     if("End of /NAMES list" in line):
+        print(Back.GREEN + Fore.WHITE + "[SUCCESS]: Loading Complete")
         return False
     else:
         return True
