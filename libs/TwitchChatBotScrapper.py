@@ -83,14 +83,14 @@ class TwitchChatBotScrapper(object):
                 # Here we respond to the server's PING
                 if "PING" in line:
                     self.SOCKET.send(line.replace('PING', 'PONG'))
-                    print(Back.YELLOW + "[READ PING]: Responded Pong")
+                    print(Back.YELLOW + Fore.WHITE + "[READ PING]: Responded Pong")
                 else:
                     parseChat(line, self.CHANNEL)
 
             if time.time() > start_time + 60 * 4:
                 self.closeSocket()
                 self.openSocket()
-                print(Back.YELLOW + "[NOTIFICATION]: Restarting Bot")
+                print(Back.YELLOW + Fore.WHITE + "[NOTIFICATION]: Restarting Bot")
                 start_time = time.time()
 
 
