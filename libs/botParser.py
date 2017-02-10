@@ -10,6 +10,7 @@ from colorama import init, Fore, Back, Style
 chat_log = {}
 message_count = 0
 file_name = ""
+new_subs_count = 0
 
 
 def createOutputFile(channel_name):
@@ -36,6 +37,24 @@ def createOutputFile(channel_name):
 def parseChat(line, channel):
     '''Parses a message into smaller components to be serialized.'''
     global message_count
+    global new_subs_count
+
+    if "just subscribed" in line:
+        try:
+            message_name = "subscription-" + str(new_subs_count)
+            username = getSubscriberName(line)
+            prime = getTwitchPrimeSubs(line)
+            timestamp = str(datetime.datetime.now()).split(".")[0]
+            sub_id = new_subs_count
+            print(Fore.YELLOW + "[NOTIFICATION]: Serializing Subscriber")
+            serializeSubData(message_name, sub_id, username, prime, timestamp)
+        except Exception as e:
+            print(Back.RED + Fore.WHITE +
+                  "[Error]: Message contained an error!")
+            print(line)
+            return
+
+        new_subs_count += 1
 
     if "PRIVMSG" in line:
         try:
@@ -50,7 +69,7 @@ def parseChat(line, channel):
             turbo = getTurbo(line)
             prime = getPrime(line)
             print(Fore.YELLOW + "[NOTIFICATION]: Serializing message")
-            serializeData(
+            serializePRIVMSData(
                 message_name, message_count, owner, subbadge, turbo, prime,
                 mod, sub, username, timestamp, message)
             message_count += 1
@@ -61,7 +80,7 @@ def parseChat(line, channel):
             return
 
 
-def serializeData(
+def serializePRIVMSData(
         message_name, message_id, owner, subbadge, turbo,
         prime, mod, sub, username, timestamp, message):
     '''Opens the target file where we store all the data,
