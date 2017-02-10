@@ -5,7 +5,7 @@ IRC = {
     'PORT': 6667,
 }
 
-# Do not change if using docker!
+
 # If you're using a local database the host is 'localhost'
 DATABASE = {
     'NAME': 'twitch',

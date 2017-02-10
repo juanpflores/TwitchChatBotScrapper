@@ -113,25 +113,3 @@ def serializePRIVMSData(
     packed_data = msgpack.packb(data)
     with open(file_name, "w+") as sample:
         sample.write(packed_data)
-
-
-def serializeSubData(message_name, sub_id, username, prime, timestamp):
-    '''Serialize New subscription data'''
-    # Open the target file created before.
-    with open(file_name, "r") as sample:
-        data = msgpack.unpack(sample)
-
-    data[message_name] = {
-        'id': sub_id,
-        'username': username,
-        'timestamp': timestamp,
-        'prime': prime
-    }
-
-    print(Fore.GREEN + "[SUCCESS]: Added Subscription " +
-          str(message_id) + " to Dictionary")
-
-    # Pack data and save the file.
-    packed_data = msgpack.packb(data)
-    with open(file_name, "w+") as sample:
-        sample.write(packed_data)
