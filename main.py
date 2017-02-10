@@ -2,9 +2,9 @@
 
 from colorama import init, Fore, Back, Style
 from libs.TwitchChatBotScrapper import TwitchChatBotScrapper
-from settings import HOST, PORT, PASS, IDENT, CHANNEL
+from settings import IRC
 
-chatBot = TwitchChatBotScrapper(HOST, PORT, PASS, IDENT, CHANNEL)
+chatBot = TwitchChatBotScrapper(IRC['HOST'], IRC['PORT'], IRC['PASS'], IRC['IDENT'], IRC['CHANNEL'])
 
 # Initialize Colorama for term notifications
 init(autoreset=True)

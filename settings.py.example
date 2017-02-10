@@ -1,0 +1,19 @@
+IRC = {
+    'SERVER': 'irc.chat.twitch.tv',
+    'NICK': 'USERNAME',
+    'PASSWORD': 'oauth:YOUR_KEY_HERE',
+    'PORT': 6667,
+}
+
+
+# If you're using a local database the host is 'localhost'
+DATABASE = {
+    'NAME': 'twitch',
+    'USER': 'postgres',
+    'PASSWORD': 'root',
+    'HOST': 'db',
+}
+
+API = {
+	'CLIENTID': 'YOUR_CLIENT_ID'
+}

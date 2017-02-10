@@ -5,6 +5,7 @@ TwitchChatBotScrapper is a Twitch bot that uses Twitch IRC to connected to a use
 1. PIP
 2. `pip install msgpack-python`
 3. `pip install colorama`
+4. `pip install request`
 
 
 ## Installation

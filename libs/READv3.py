@@ -112,6 +112,18 @@ def getBanduration(line):
     banduration = separate2[0].strip()
     return banduration
 
+def getSubscriberName(line):
+    '''Gets username of a new subiscriber.'''
+    separate = line.split(":")
+    subscriber = separate[2].split("just")[0]
+    return subscriber
+
+def getTwitchPrimeSubs(line):
+    '''Gets if the new subscriber used Twitch Prime.'''
+    if "Twitch Prime" in line:
+        return True
+    else:
+        return False
 
 def getr9k(line):
     '''Parses mode changes in r9k'''
